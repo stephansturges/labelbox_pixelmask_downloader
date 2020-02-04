@@ -3,7 +3,6 @@ import os
 import json
 import urllib3
 import cv2
-import numpy as np
 
 
 if __name__ == "__main__":
@@ -28,8 +27,9 @@ output_folder = flags.outputfolder
 binarize = flags.binarize
 convert_to_jpg = flags.jpg
 
+
 if not os.path.exists(output_folder):
-    os.mkdir(output_folder)
+    os.makedirs(output_folder)
 
 http = urllib3.PoolManager()
 
