@@ -18,7 +18,7 @@ if __name__ == "__main__":
         "--binarize", default=False, help="Binarize your masks with opencv", required=False
     )
     parser.add_argument(
-        "--jpg", default=False, help="Convert your images to JPG (from png default)", required=False
+        "--jpg", default=False, help="Convert your images to JPG (from png default) after binarization", required=False
     )
     flags = parser.parse_args()
 
