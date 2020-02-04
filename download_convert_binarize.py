@@ -45,46 +45,45 @@ def is_json_key_present(json, key):
 with open(input_json_file) as json_file:
     data = json.load(json_file)
     for object in data:
-        if object["ID"] == "ck5wjbve57wqd0956iptqs35j":
-            try:
-                x = object["Label"]["objects"][0]["instanceURI"]
-                y = object["External ID"]
-                z = object["Dataset Name"]
-            except KeyError:
-                pass
-            else:
-                print(object)
-                print(object["Label"]["objects"][0]["instanceURI"])
-                print(object["External ID"])
-                print(object["Dataset Name"])
+        try:
+            x = object["Label"]["objects"][0]["instanceURI"]
+            y = object["External ID"]
+            z = object["Dataset Name"]
+        except KeyError:
+            pass
+        else:
+            print(object)
+            print(object["Label"]["objects"][0]["instanceURI"])
+            print(object["External ID"])
+            print(object["Dataset Name"])
 
-                if not os.path.exists(os.path.join(output_folder, object["Dataset Name"])):
-                    os.mkdir(os.path.join(output_folder, object["Dataset Name"]))
+            if not os.path.exists(os.path.join(output_folder, object["Dataset Name"])):
+                os.mkdir(os.path.join(output_folder, object["Dataset Name"]))
 
-                path = os.path.join(output_folder, object["Dataset Name"], object["External ID"][:-4]+".png")
-                r = http.request('GET', object["Label"]["objects"][0]["instanceURI"], preload_content=False)
-                print(r.status)
-                with open(path, 'wb') as out:
-                    while True:
-                        data = r.read(chunk_size)
-                        if not data:
-                            break
-                        out.write(data)
-                if binarize:
-                    img = cv2.imread(path,0)
-                    ret,thresh1 = cv2.threshold(img,127,255,cv2.THRESH_BINARY)
-                    if convert_to_jpg:
-                        jpg_binarized_path = path[:-4]+".jpg"
-                        with open(jpg_binarized_path, 'wb') as out:
-                            try:
-                                data = ret
-                                cv2.imwrite(jpg_binarized_path, thresh1)
-                            except:
-                                pass
-                    else:
-                        with open(path, 'wb') as out:
-                            try:
-                                data = ret
-                                cv2.imwrite(path, thresh1)
-                            except:
-                                pass
+            path = os.path.join(output_folder, object["Dataset Name"], object["External ID"][:-4]+".png")
+            r = http.request('GET', object["Label"]["objects"][0]["instanceURI"], preload_content=False)
+            print(r.status)
+            with open(path, 'wb') as out:
+                while True:
+                    data = r.read(chunk_size)
+                    if not data:
+                        break
+                    out.write(data)
+            if binarize:
+                img = cv2.imread(path,0)
+                ret,thresh1 = cv2.threshold(img,127,255,cv2.THRESH_BINARY)
+                if convert_to_jpg:
+                    jpg_binarized_path = path[:-4]+".jpg"
+                    with open(jpg_binarized_path, 'wb') as out:
+                        try:
+                            data = ret
+                            cv2.imwrite(jpg_binarized_path, thresh1)
+                        except:
+                            pass
+                else:
+                    with open(path, 'wb') as out:
+                        try:
+                            data = ret
+                            cv2.imwrite(path, thresh1)
+                        except:
+                            pass
